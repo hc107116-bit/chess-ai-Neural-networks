@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>شطرنج AI — جرب الآن</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg-color: #0d0e25;
+      --primary-gradient: linear-gradient(90deg, #ff9966 0%, #ff5e62 100%);
+      --text-color: #ffffff;
+      --glass-bg: rgba(13,14,37,0.85);
+      --accent-color: #ff7e5f;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;font-family:'Cairo',sans-serif}
+    html,body{height:100%}
+    body{background:var(--bg-color);color:var(--text-color);display:flex;align-items:center;justify-content:center;}
+
+    /* الصفحة الرئيسية - واجهة كاملة بدون نافبار */
+    .page{
+      width:100%;min-height:100vh;padding:40px 20px;display:flex;align-items:center;justify-content:center;
+    }
+
+    .card-center{
+      width:100%;max-width:1100px;background:rgba(255,255,255,0.03);border-radius:18px;padding:60px 50px;border:1px solid rgba(255,255,255,0.06);backdrop-filter: blur(6px);
+      box-shadow: 0 10px 40px rgba(2,6,23,0.6);position:relative;overflow:hidden;
+    }
+
+    .glow{position:absolute;right:-10%;top:-10%;width:480px;height:480px;background:var(--accent-color);filter:blur(140px);opacity:0.12;transform:rotate(20deg);}
+
+    .hero{
+      display:flex;gap:40px;align-items:center;justify-content:space-between;flex-wrap:wrap;
+    }
+
+    .hero-text{flex:1;min-width:320px}
+    .hero-text h1{font-size:3rem;line-height:1.05;margin-bottom:18px}
+    .hero-text h1 .highlight{background:var(--primary-gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .hero-text p{color:#d0d0d8;margin-bottom:22px;font-size:1.05rem}
+
+    .question{font-size:1.15rem;color:#fff;margin-bottom:28px;font-weight:700}
+
+    .buttons{display:flex;gap:16px;flex-wrap:wrap}
+    .btn{padding:12px 28px;border-radius:999px;font-weight:700;cursor:pointer;border:none;outline:none}
+    .btn-primary{background:var(--primary-gradient);box-shadow:0 8px 30px rgba(255,94,98,0.25);color:#fff}
+    .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.12);color:#fff}
+
+    /* جزء الأي فريم / معاينة اللعب */
+    .preview{
+      flex:0 0 440px;min-width:300px;height:320px;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.04);background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));display:flex;align-items:center;justify-content:center;position:relative
+    }
+    .preview img{width:100%;height:100%;object-fit:cover;opacity:0.9}
+    .preview .label{position:absolute;left:12px;bottom:12px;background:rgba(0,0,0,0.45);padding:6px 10px;border-radius:8px;font-size:0.9rem}
+
+    /* المودال (معاينة اللعب) */
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:999}
+    .modal.open{display:flex}
+    .modal-content{width:92%;max-width:1000px;height:80vh;background:#0b0c1a;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.06);position:relative}
+    .modal iframe{width:100%;height:100%;border:0}
+    .modal .close{position:absolute;left:14px;top:12px;padding:8px 12px;border-radius:10px;background:rgba(255,255,255,0.06);cursor:pointer}
+
+    /* فوتر صغير داخل البطاقة */
+    .mini-footer{margin-top:18px;color:#bbb;font-size:0.9rem;display:flex;justify-content:space-between;align-items:center}
+
+    @media (max-width:900px){
+      .hero{flex-direction:column-reverse;align-items:center}
+      .hero-text h1{font-size:2.25rem;text-align:center}
+      .preview{width:90%;height:260px}
+      .card-center{padding:30px}
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="card-center">
+      <div class="glow" aria-hidden="true"></div>
+
+      <div class="hero">
+        <div class="hero-text">
+          <h1>العب الشطرنج مع <span class="highlight">الذكاء الاصطناعي</span><br> و <span class="highlight">الشبكات العصبيه</span></h1>
+          <p>تحدى نماذج الذكاء الاصطناعي والخوارزميات المتقدمة. اختبر مهاراتك في مواجهة أنظمة مدربة على ملايين التحركات.</p>
+
+          <div class="question">هل يمكنك الفوز على الشبكات العصبيه و الخويزمات ؟</div>
+
+          <div class="buttons">
+            <button class="btn btn-primary" id="tryBtn">جرب الآن</button>
+            <a href="https://hc107116-bit.github.io/chess-ai-Neural-networks/" target="_blank" rel="noopener" class="btn btn-ghost" style="display:inline-flex;align-items:center;justify-content:center">ابدأ</a>
+          </div>
+
+          <div class="mini-footer">
+            <div>محرك: شبكات عصبية + خوارزميات تقييم</div>
+            <div>مستوى: مبتدئ ▪ متوسط ▪ محترف</div>
+          </div>
+        </div>
+
+        <div class="preview" aria-hidden="true">
+          <!-- صورة عرض توضيحية (يمكن تغييرها لاحقاً) -->
+          <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=3c3f9a2b4f0b2c9e1d6f1a4e9a8b4c2d" alt="Chess preview"/>
+          <div class="label">معاينة اللعب</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- مودال iframe يعرض الموقع عند الضغط على 'جرب الآن' -->
+  <div class="modal" id="modal">
+    <div class="modal-content" role="dialog" aria-modal="true">
+      <button class="close" id="closeBtn">إغلاق ✕</button>
+      <iframe id="chessFrame" src="https://hc107116-bit.github.io/chess-ai-Neural-networks/" title="Chess AI"></iframe>
+    </div>
+  </div>
+
+  <script>
+    const tryBtn = document.getElementById('tryBtn');
+    const modal = document.getElementById('modal');
+    const closeBtn = document.getElementById('closeBtn');
+
+    tryBtn.addEventListener('click', ()=>{
+      modal.classList.add('open');
+      // ممكن لاحقاً تمرير إعدادات أو مستوى للـ iframe عبر query params
+    });
+
+    closeBtn.addEventListener('click', ()=>{
+      modal.classList.remove('open');
+      // إعادة تعيين src لمنع التشغيل في الخلفية (اختياري)
+      const frame = document.getElementById('chessFrame');
+      frame.src = frame.src;
+    });
+
+    // إغلاق المودال عند النقر خارج المحتوى
+    modal.addEventListener('click', (e)=>{
+      if(e.target === modal) modal.classList.remove('open');
+    });
+  </script>
+</body>
+</html>
