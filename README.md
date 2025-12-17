@@ -1,25 +1,60 @@
-# chess-ai
-A chess engine by someone who doesn't know how to play chess.
+Chess AI: A Neural Network-Powered Chess Engine Web Interface
 
-## About
-chess-ai is a simple chess AI in JavaScript. 
+The Chess AI project hosted at hc107116-bit.github.io/chess-ai-Neural-networks/ is a browser-based chess engine platform that blends classical chess gameplay with modern artificial intelligence concepts. From its clean user interface to its interactive features, this project serves as both a playable chess application and a demonstration of AI-driven decision making directly in the browser. 
+GitHub Pages
 
-The primary concern of chess-ai is the decision-making part of the application. All functionality outside the scope of the AI are implemented using external libraries:
-- Chessboard GUI: Using the chessboard.js API
-- Game Mechanics: Using the chess.js API
+Overview and Interface
 
-The AI uses the [minimax algorithm](https://en.wikipedia.org/wiki/Minimax), which is optimised by [alpha-beta pruning](https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning). 
+At first glance, the Chess AI website presents a professional, responsive user interface that resembles commercial chess tools while remaining lightweight and intuitive. The layout is structured into distinct sections for:
 
-The evaluation function uses [piece square tables](https://www.chessprogramming.org/Piece-Square_Tables) adapted from Sunfish.py, and eliminates the need for nested loops by updating the sum based on each move instead of re-computing the sum of individual pieces at each leaf node.
+Engine performance metrics, such as the number of positions evaluated, elapsed time, and positions per second.
 
-A global sum is used to keep track of black's evaluation score after each move, which is used to display the 'advantage' bar. 
+Search depth controls for both Black and White, allowing users to adjust the strength and foresight of the AI.
 
-## How to Play?
-1. Head over to https://zeyu2001.github.io/chess-ai/.
+Game features like Undo/Redo, Opening presets (e.g., Ruy Lopez, Italian Game, Sicilian Defense), and Computer vs Computer mode. 
+GitHub Pages
 
-2. Play as white by dragging a piece to your desired location. The AI plays as black. The AI's minimax search depth (which is directly related to how well it will play) can be customised using the 'Search Depth (Black)' dropdown. Using a higher value will improve the AI's accuracy, but it will take longer to decide on the next move.
+These components make the platform suitable for casual players who want a quick game, as well as more serious users interested in analyzing how AI reaches its decisions.
 
-3. To pit the AI against itself, click the 'Start Game' button under Computer vs. Computer. You can stop the game at any time using the 'Stop and Reset' button.
+AI and Neural Networks in Chess
 
-## License
-Use of this project is governed by the [MIT License](LICENSE).
+Although the interface is accessible to any chess enthusiast, what sets this site apart is its emphasis on neural network-based intelligence. Neural networks are a class of machine learning models inspired by the human brain, capable of evaluating complex positions and patterns that traditional rule-based engines might miss.
+
+In cutting-edge chess engines such as AlphaZero and Leela Chess Zero, deep neural networks are trained through self-play and reinforcement learning to understand strategy at a very high level — often exceeding the performance of classical engines. 
+Wikipedia
++1
+
+Modern neural network methods can learn from millions of positions and refine their evaluation of board states without handcrafted heuristics, making them powerful tools for simulating intuition and long-term planning in chess. 
+Chess.com
+
+Features and User Experience
+
+The Chess AI project includes a balance of AI control and user interaction:
+
+Users can customize search depth to make the AI play more deeply or more quickly.
+
+The suggested move feature provides hints for White, which can help learners understand strong move choices.
+
+Game control buttons allow starting, stopping, and resetting matches, while opening position presets let players jump into popular chess openings with a single click. 
+GitHub Pages
+
+The interface also displays a dynamic advantage bar and status text, giving immediate visual feedback on the game state — whether one side has the advantage, whether there’s a check, checkmate, or draw. 
+GitHub Pages
+
+Educational and Practical Value
+
+This web-based Chess AI serves several purposes:
+
+Playability: Casual users can play against an AI of adjustable strength without installing software.
+
+Learning Tool: Players can enable move suggestions and view evaluations to learn strategy and tactics.
+
+AI Demonstration: It showcases how chess engines, particularly those influenced by neural network thinking, evaluate positions and make decisions. This can spark interest in machine learning, neural networks, and their applications in strategy games. 
+Wikipedia
+
+Conclusion
+
+While many online chess engines rely on classical evaluation techniques, the Chess AI site stands out by integrating neural network-style decision making into a sleek, user-friendly interface. Even though it runs entirely in the browser, it offers many features familiar to desktop chess applications — adjustable engine strength, opening presets, and performance metrics — making it useful for both casual play and analytical learning. 
+GitHub Pages
+
+If you’re interested in the intersection of chess and artificial intelligence, this project demonstrates how modern machine learning concepts can be brought directly to users in a polished, interactive web experience. 
