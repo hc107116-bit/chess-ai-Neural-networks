@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chess AI — Professional UI</title>
+  <meta name="description" content="A simple chess AI with a polished, responsive UI" />
+
+  <!-- button Google Fonts play vs computer-->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap CSS (kept same version to avoid JS breakage) -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+  <!-- Chessboard CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css" crossorigin="anonymous">
+
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/5b14db5f0b.js" crossorigin="anonymous"></script>
+
+  <style>
+    :root{
+      --bg: #0f1724;           /* deep navy */
+      --card: #0b1220;         /* card dark */
+      --muted: #98a2b3;        /* muted text */
+      --accent: #ff7a18;       /* warm orange */
+      --accent-2: #ffb47b;     /* light orange */
+      --glass: rgba(255,255,255,0.03);
+      --success: #10b981;
+    }
+
+    /* Reset / base */
+    html,body{height:100%;}
+    body{
+      margin:0;
+      font-family: 'Inter', 'Cairo', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg, #071428 0%, #071428 55%, #081827 100%);
+      color: #e6eef6;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    main{padding:28px 12px 80px;}
+
+    .app-shell{
+      max-width:1200px;
+      margin:0 auto;
+    }
+
+    header.app-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:18px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .brand .logo{
+      width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      box-shadow:0 6px 18px rgba(255,122,24,0.18);
+      display:flex;align-items:center;justify-content:center;font-weight:700;color:#081827;
+      font-family: 'Cairo', sans-serif;
+    }
+    .brand h1{font-size:18px;margin:0;font-weight:700;letter-spacing:0.2px}
+    .brand p{margin:0;font-size:12px;color:var(--muted)}
+
+    .controls{display:flex;align-items:center;gap:8px}
+
+    .card-panel{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.015));
+      border:1px solid rgba(255,255,255,0.03);padding:18px;border-radius:12px;box-shadow:0 8px 30px rgba(2,6,23,0.6);
+    }
+
+    .stats{display:flex;gap:12px;flex-wrap:wrap}
+    .stat{min-width:140px;padding:12px;border-radius:10px;background:var(--glass);border:1px solid rgba(255,255,255,0.02)}
+    .stat .label{font-size:12px;color:var(--muted)}
+    .stat .value{font-size:18px;font-weight:700}
+
+    /* Board container */
+    #myBoard{
+      max-width:540px;
+      margin:0 auto;
+      border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.04);
+      box-shadow: 0 18px 40px rgba(2,6,23,0.6);
+      background:linear-gradient(180deg,#0c1624, #071428);
+      padding:10px;
+    }
+
+    /* Buttons */
+    .btn-primary.custom{
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      border:0;color:#081827;font-weight:700;box-shadow:0 8px 20px rgba(255,122,24,0.16);
+    }
+    .btn-outline-muted{border-color:rgba(255,255,255,0.06);color:var(--muted);background:transparent}
+
+    .section-title{font-weight:700;margin-bottom:8px}
+
+    /* Advantage progress */
+    .advantage-row{display:flex;gap:12px;align-items:center}
+    .advantage-number{font-weight:700;font-size:20px}
+    .progress{height:18px;border-radius:12px;overflow:hidden;background:rgba(255,255,255,0.03)}
+    .progress-bar-adv{background:linear-gradient(90deg,var(--accent),var(--accent-2));}
+
+    /* Small responsive tweaks */
+    @media (max-width: 991px){
+      .brand h1{font-size:16px}
+      #myBoard{max-width:100%}
+    }
+
+    /* Small utility */
+    .muted{color:var(--muted)}
+    .text-center{ text-align:center }
+    footer{margin-top:36px;text-align:center;color:var(--muted);font-size:13px}
+
+    /* Hover & focus improvements */
+    .btn:focus{outline:none;box-shadow:0 0 0 3px rgba(255,122,24,0.12)}
+  </style>
+</head>
+<body>
+  <main>
+    <div class="app-shell">
+      <header class="app-header">
+        <div class="brand">
+          <div class="logo">♟</div>
+          <div>
+            <h1>Chess AI</h1>
+            <p>Simple, fast, and now with a professional interface</p>
+          </div>
+        </div>
+        <div class="controls">
+          <button class="btn btn-outline-muted" id="open-settings"><i class="fas fa-sliders-h"></i>&nbsp; Settings</button>
+          <button class="btn btn-outline-muted" id="open-openings"><i class="fas fa-book-open"></i>&nbsp; Openings</button>
+          <button class="btn btn-primary custom" id="compVsCompBtn"><i class="fas fa-robot"></i>&nbsp;  Computer vs Computer</button>
+        </div>
+      </header>
+
+      <div class="row">
+        <div class="col-lg-6 mb-3">
+          <div class="card-panel">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div>
+                <div class="section-title">Engine Performance</div>
+                <div class="muted">Positions evaluated & timing</div>
+              </div>
+              <div class="stats">
+                <div class="stat text-center">
+                  <div class="label">Positions</div>
+                  <div id="position-count" class="value">0</div>
+                </div>
+                <div class="stat text-center">
+                  <div class="label">Elapsed</div>
+                  <div id="time" class="value">0s</div>
+                </div>
+                <div class="stat text-center">
+                  <div class="label">P / s</div>
+                  <div id="positions-per-s" class="value">0</div>
+                </div>
+              </div>
+            </div>
+
+            <hr style="border-color:rgba(255,255,255,0.02)" />
+
+            <div class="mb-3">
+              <div class="section-title">Search Depth</div>
+              <div class="row">
+                <div class="col-6">
+                  <label class="muted">Black</label>
+                  <select id="search-depth" class="form-control">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3" selected>3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                  </select>
+                </div>
+                <div class="col-6">
+                  <label class="muted">White</label>
+                  <select id="search-depth-white" class="form-control">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3" selected>3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-center justify-content-between">
+              <div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="showHint">
+                  <label class="form-check-label muted" for="showHint">Show Suggested Move (White)</label>
+                </div>
+              </div>
+              <div>
+                <button class="btn btn-outline-muted" id="undoBtn"><i class="fas fa-undo"></i>&nbsp; Undo</button>
+                <button class="btn btn-outline-muted" id="redoBtn"><i class="fas fa-redo"></i>&nbsp; Redo</button>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="card-panel mt-3">
+            <div class="section-title">Openings</div>
+            <div class="row mt-2">
+              <div class="col-6 mb-2"><button class="btn btn-block btn-primary custom" id="ruyLopezBtn">Ruy Lopez</button></div>
+              <div class="col-6 mb-2"><button class="btn btn-block btn-primary custom" id="italianGameBtn">Italian Game</button></div>
+              <div class="col-6 mb-2"><button class="btn btn-block btn-primary custom" id="sicilianDefenseBtn">Sicilian Defense</button></div>
+              <div class="col-6 mb-2"><button class="btn btn-block btn-outline-muted" id="startBtn">Start Position</button></div>
+            </div>
+          </div>
+
+          <div class="card-panel mt-3">
+            <div class="section-title">Game Control</div>
+            <div class="d-flex gap-2 align-items-center">
+              <button class="btn btn-success" id="comp-vs-comp-start"><i class="fas fa-play"></i>&nbsp; Start</button>
+              <button class="btn btn-danger" id="resetBtn"><i class="fas fa-stop"></i>&nbsp; Stop & Reset</button>
+            </div>
+
+            <hr style="border-color:rgba(255,255,255,0.02)" />
+
+            <div class="mt-2">
+              <div class="section-title">Advantage</div>
+              <div class="advantage-row">
+                <div style="flex:1">
+                  <div class="d-flex justify-content-between"><small class="muted">Who has advantage</small><span id="advantageNumber" class="advantage-number">0</span></div>
+                  <div class="progress mt-2" role="progressbar" aria-valuemin="-2000" aria-valuemax="4000">
+                    <div id="advantageBar" class="progress-bar progress-bar-adv" style="width:50%"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-3">
+                <div class="section-title">Status</div>
+                <p id="status" class="muted">No check, checkmate, or draw.</p>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="col-lg-6">
+          <div id="myBoard" aria-label="Chessboard" class="mb-3">
+            <!-- chessboardjs will mount here -->
+            <div id="board-container" style="width:100%;height:100%"></div>
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <button class="btn btn-outline-muted" id="hintBtn"><i class="fas fa-lightbulb"></i>&nbsp; Hint</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- JS depedencies (defer) -->
+  <script defer src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+  <script defer src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js" crossorigin="anonymous"></script>
+  <!-- keep your chess engine script name/path -->
+  <script defer src="js/chess.js"></script>
+  <script defer src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js" integrity="sha384-6khuMg9gaYr5AxOqhkVIODVIvm9ynTT5J4V1cfthmT+emCG6yVmEZsRHdxlotUnm" crossorigin="anonymous"></script>
+  <script defer src="js/main.js"></script>
+
+</body>
+</html>
